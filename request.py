@@ -93,23 +93,24 @@ async def get_gemini_payload(request, engine, provider, api_key=None):
                 }
             )
         elif msg.role == "tool":
-            function_call_name = function_arguments["functionCall"]["name"]
-            messages.append(
-                {
-                    "role": "function",
-                    "parts": [{
-                    "functionResponse": {
-                        "name": function_call_name,
-                        "response": {
+            if function_arguments is not None:
+                function_call_name = function_arguments["functionCall"]["name"]
+                messages.append(
+                    {
+                        "role": "function",
+                        "parts": [{
+                        "functionResponse": {
                             "name": function_call_name,
-                            "content": {
-                                "result": msg.content,
+                            "response": {
+                                "name": function_call_name,
+                                "content": {
+                                    "result": msg.content,
+                                }
                             }
                         }
+                        }]
                     }
-                    }]
-                }
-            )
+                )
         elif msg.role != "system":
             messages.append({"role": msg.role, "parts": content})
         elif msg.role == "system":
@@ -429,23 +430,24 @@ async def get_vertex_gemini_payload(request, engine, provider, api_key=None):
                 }
             )
         elif msg.role == "tool":
-            function_call_name = function_arguments["functionCall"]["name"]
-            messages.append(
-                {
-                    "role": "function",
-                    "parts": [{
-                    "functionResponse": {
-                        "name": function_call_name,
-                        "response": {
+            if function_arguments is not None:
+                function_call_name = function_arguments["functionCall"]["name"]
+                messages.append(
+                    {
+                        "role": "function",
+                        "parts": [{
+                        "functionResponse": {
                             "name": function_call_name,
-                            "content": {
-                                "result": msg.content,
+                            "response": {
+                                "name": function_call_name,
+                                "content": {
+                                    "result": msg.content,
+                                }
                             }
                         }
+                        }]
                     }
-                    }]
-                }
-            )
+                )
         elif msg.role != "system":
             messages.append({"role": msg.role, "parts": content})
         elif msg.role == "system":
