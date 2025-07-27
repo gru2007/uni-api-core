@@ -208,6 +208,7 @@ async def get_gemini_payload(request, engine, provider, api_key=None):
                 if processed_tools:
                     payload.update({
                         "tools": [{
+                            "tool_type": "FUNCTION",
                             "function_declarations": [tool["function"] for tool in processed_tools]
                         }],
                         "tool_config": {
@@ -508,6 +509,7 @@ async def get_vertex_gemini_payload(request, engine, provider, api_key=None):
             if field == "tools":
                 payload.update({
                     "tools": [{
+                        "tool_type": "FUNCTION",
                         "function_declarations": [tool["function"] for tool in value]
                     }],
                     "tool_config": {
