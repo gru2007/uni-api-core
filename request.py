@@ -1098,20 +1098,17 @@ async def get_gpt_payload(request, engine, provider, api_key=None):
     if request.model.endswith("-search") and "gemini" in original_model:
         if "tools" not in payload:
             payload["tools"] = [{
-                "type": "function",
-                "function": {
+                "tool_type": "FUNCTION",
+                "function_declarations": [{
                     "name": "googleSearch",
                     "description": "googleSearch"
-                }
+                }]
             }]
         else:
-            if not any(tool["function"]["name"] == "googleSearch" for tool in payload["tools"]):
-                payload["tools"].append({
-                    "type": "function",
-                    "function": {
-                        "name": "googleSearch",
-                        "description": "googleSearch"
-                    }
+            if not any(tool.get("function_declarations") and any(func["name"] == "googleSearch" for func in tool["function_declarations"]) for tool in payload["tools"]):
+                payload["tools"][0]["function_declarations"].append({
+                    "name": "googleSearch",
+                    "description": "googleSearch"
                 })
 
     if safe_get(provider, "preferences", "post_body_parameter_overrides", default=None):
